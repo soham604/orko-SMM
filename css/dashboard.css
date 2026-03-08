@@ -1290,6 +1290,220 @@ body {
   background: var(--red-dim);
 }
 
+/* ---- Analyzed Inspo Cards ---- */
+
+.inspo-card-analyzed {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color var(--transition);
+}
+
+.inspo-card-analyzed:hover {
+  border-color: var(--accent);
+}
+
+.inspo-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  cursor: pointer;
+  gap: 12px;
+  user-select: none;
+}
+
+.inspo-card-header .inspo-platform-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.inspo-card-header .inspo-handle {
+  font-family: var(--font-data);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+}
+
+.inspo-card-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.inspo-meta {
+  font-family: var(--font-data);
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.inspo-ideas-badge {
+  background: var(--accent-dim);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-family: var(--font-data);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.inspo-chevron {
+  font-size: 12px;
+  color: var(--text-muted);
+  transition: transform 250ms ease;
+}
+
+.inspo-card-analyzed.open .inspo-chevron {
+  transform: rotate(180deg);
+}
+
+.inspo-pending-badge {
+  background: var(--border);
+  color: var(--text-muted);
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: var(--font-data);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.inspo-analysis-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 350ms ease;
+}
+
+.inspo-card-analyzed.open .inspo-analysis-body {
+  max-height: 600px;
+}
+
+.inspo-analysis-content {
+  padding: 0 18px 16px;
+  border-top: 1px solid var(--border);
+}
+
+.inspo-bio {
+  font-family: var(--font-data);
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 12px 0;
+}
+
+.inspo-patterns-label {
+  font-family: var(--font-data);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.inspo-patterns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.inspo-pattern-card {
+  background: var(--bg-darker);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.inspo-pattern-card .pattern-icon {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.inspo-pattern-card .pattern-title {
+  font-family: var(--font-data);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.inspo-pattern-card .pattern-desc {
+  font-family: var(--font-data);
+  font-size: 9px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.inspo-pattern-card .pattern-tag {
+  display: inline-block;
+  margin-top: 4px;
+  font-family: var(--font-data);
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 1px 6px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+}
+
+/* ---- Inspo Ideas Section ---- */
+
+.inspo-ideas-section {
+  margin-top: 32px;
+}
+
+.inspo-ideas-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.inspo-ideas-header .section-label {
+  font-family: var(--font-data);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
+
+.inspo-ideas-label {
+  font-family: var(--font-data);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.inspo-attribution {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.inspo-attribution-icon {
+  font-size: 10px;
+  color: var(--accent);
+}
+
+.inspo-attribution span {
+  font-family: var(--font-data);
+  font-size: 9px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 /* ========================================
    TOAST
    ======================================== */
@@ -1592,6 +1806,23 @@ body {
   .inspo-remove-btn {
     min-height: 36px;
     padding: 8px 14px;
+  }
+
+  .inspo-patterns-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .inspo-card-header {
+    padding: 12px 14px;
+    gap: 8px;
+  }
+
+  .inspo-meta {
+    display: none;
+  }
+
+  .inspo-analysis-content {
+    padding: 0 14px 14px;
   }
 
   /* Toast */

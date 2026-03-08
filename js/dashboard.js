@@ -43,6 +43,12 @@ const TR = {
   'inspo_add': { fr: '+ Ajouter', en: '+ Add' },
   'inspo_empty': { fr: 'Aucun profil ajouté. Collez un lien de profil Instagram ou TikTok ci-dessus.', en: 'No profiles added yet. Paste an Instagram or TikTok profile link above.' },
   'inspo_remove': { fr: 'Retirer', en: 'Remove' },
+  'inspo_pending': { fr: 'EN ATTENTE', en: 'PENDING' },
+  'inspo_ideas_title': { fr: 'IDÉES INSPIRÉES', en: 'INSPIRED IDEAS' },
+  'inspo_ideas_suffix': { fr: 'idées de', en: 'ideas from' },
+  'inspo_profiles_word': { fr: 'profils', en: 'profiles' },
+  'inspo_patterns_label': { fr: 'PATTERNS DE CONTENU', en: 'CONTENT PATTERNS' },
+  'inspo_inspired_by': { fr: 'Inspiré par', en: 'Inspired by' },
 
   // Platform cards
   'followers': { fr: 'Abonnés', en: 'Followers' },
@@ -571,14 +577,18 @@ function copyIdea(idx) {
 }
 
 
+// ── KEY MAPS (shared by renderDashboard + renderInspoIdeas) ──
+
+const fmtKey = {'Reel / TikTok':'fmt_reel_tiktok','Reel':'fmt_reel','Tour':'fmt_tour','Educational':'fmt_educational','Comparison':'fmt_comparison','Story':'fmt_story','BTS':'fmt_bts','Reply Series':'fmt_reply','Monthly Recap':'fmt_recap','Number Breakdown':'fmt_breakdown','Cultural':'fmt_cultural','Lifestyle':'fmt_lifestyle','Myth-busting':'fmt_myth','Meta / Reflection':'fmt_reflection'};
+const platKey = {'Both':'both','TikTok first':'tiktok_first','Instagram first':'ig_first'};
+const perfKey = {'High':'perf_high','Medium':'perf_medium','Low-Med':'perf_low'};
+
+
 // ── RENDER PAGE ─────────────────────────
 
 function renderDashboard() {
   const d = CLIENT_DATA[currentClient];
   const app = document.getElementById('app');
-  const fmtKey = {'Reel / TikTok':'fmt_reel_tiktok','Reel':'fmt_reel','Tour':'fmt_tour','Educational':'fmt_educational','Comparison':'fmt_comparison','Story':'fmt_story','BTS':'fmt_bts','Reply Series':'fmt_reply','Monthly Recap':'fmt_recap','Number Breakdown':'fmt_breakdown','Cultural':'fmt_cultural','Lifestyle':'fmt_lifestyle','Myth-busting':'fmt_myth','Meta / Reflection':'fmt_reflection'};
-  const platKey = {'Both':'both','TikTok first':'tiktok_first','Instagram first':'ig_first'};
-  const perfKey = {'High':'perf_high','Medium':'perf_medium','Low-Med':'perf_low'};
   const clients = Object.entries(CLIENT_DATA);
   const initials = d.name.split(' ').map(w => w[0]).join('');
 
@@ -950,6 +960,9 @@ function renderDashboard() {
           <div class="inspo-profiles" id="inspo-list">
             ${renderInspoProfiles()}
           </div>
+          <div id="inspo-ideas-container">
+            ${renderInspoIdeas()}
+          </div>
         </div>
 
       </div>
@@ -999,11 +1012,9 @@ function saveInspoProfiles(profiles) {
 
 function parseProfileUrl(url) {
   url = url.trim();
-  // Remove trailing slashes
   url = url.replace(/\/+$/, '');
   let platform = null, handle = null, fullUrl = null;
 
-  // Instagram
   const igMatch = url.match(/(?:https?:\/\/)?(?:www\.)?instagram\.com\/([a-zA-Z0-9_.]+)/);
   if (igMatch) {
     platform = 'instagram';
@@ -1012,7 +1023,6 @@ function parseProfileUrl(url) {
     return { platform, handle, fullUrl };
   }
 
-  // TikTok
   const ttMatch = url.match(/(?:https?:\/\/)?(?:www\.)?tiktok\.com\/@?([a-zA-Z0-9_.]+)/);
   if (ttMatch) {
     platform = 'tiktok';
@@ -1021,7 +1031,6 @@ function parseProfileUrl(url) {
     return { platform, handle, fullUrl };
   }
 
-  // Raw handle — try to detect
   if (url.startsWith('@')) url = url.slice(1);
   if (/^[a-zA-Z0-9_.]+$/.test(url)) {
     return { platform: 'unknown', handle: '@' + url, fullUrl: null };
@@ -1043,7 +1052,6 @@ function addInspoProfile() {
   }
 
   const profiles = getInspoProfiles();
-  // Avoid duplicates
   if (profiles.some(p => p.handle === parsed.handle && p.platform === parsed.platform)) {
     showToast('Profile already added');
     input.value = '';
@@ -1054,8 +1062,11 @@ function addInspoProfile() {
   saveInspoProfiles(profiles);
   input.value = '';
 
+  // Re-render both profiles and ideas (in case analysis exists)
   const list = document.getElementById('inspo-list');
   if (list) list.innerHTML = renderInspoProfiles();
+  const ideasContainer = document.getElementById('inspo-ideas-container');
+  if (ideasContainer) ideasContainer.innerHTML = renderInspoIdeas();
 }
 
 function removeInspoProfile(idx) {
@@ -1065,7 +1076,72 @@ function removeInspoProfile(idx) {
 
   const list = document.getElementById('inspo-list');
   if (list) list.innerHTML = renderInspoProfiles();
+  const ideasContainer = document.getElementById('inspo-ideas-container');
+  if (ideasContainer) ideasContainer.innerHTML = renderInspoIdeas();
 }
+
+
+// ── INSPO ANALYSIS HELPERS ──────────────
+
+function getInspoKey(profile) {
+  return `${profile.platform}:${profile.handle}`;
+}
+
+function getInspoAnalysis(profile) {
+  if (typeof INSPO_ANALYSIS === 'undefined') return null;
+  const clientData = INSPO_ANALYSIS[currentClient];
+  if (!clientData) return null;
+  return clientData[getInspoKey(profile)] || null;
+}
+
+function getAllInspoIdeas() {
+  if (typeof INSPO_ANALYSIS === 'undefined') return [];
+  const clientData = INSPO_ANALYSIS[currentClient];
+  if (!clientData) return [];
+
+  const profiles = getInspoProfiles();
+  const ideas = [];
+
+  profiles.forEach(profile => {
+    const analysis = clientData[getInspoKey(profile)];
+    if (analysis && analysis.ideas) {
+      analysis.ideas.forEach((idea, idx) => {
+        ideas.push({ ...idea, _profileKey: getInspoKey(profile), _srcIdx: idx });
+      });
+    }
+  });
+
+  return ideas;
+}
+
+function toggleInspoAnalysis(el) {
+  const card = el.closest('.inspo-card-analyzed');
+  if (!card) return;
+  const wasOpen = card.classList.contains('open');
+  document.querySelectorAll('.inspo-card-analyzed.open').forEach(c => c.classList.remove('open'));
+  if (!wasOpen) card.classList.add('open');
+}
+
+function copyInspoIdea(profileKey, srcIdx) {
+  if (typeof INSPO_ANALYSIS === 'undefined') return;
+  const clientData = INSPO_ANALYSIS[currentClient];
+  if (!clientData || !clientData[profileKey]) return;
+  const idea = clientData[profileKey].ideas[srcIdx];
+  if (!idea) return;
+
+  const text = `${loc(idea.title)}\n\n${loc(idea.desc)}\n\n${t('inspo_inspired_by')} ${idea.inspiredBy}`;
+  copyText(text);
+
+  const btn = document.querySelector(`.inspo-idea-copy[data-key="${profileKey}"][data-idx="${srcIdx}"]`);
+  if (btn) {
+    btn.classList.add('copied');
+    btn.innerHTML = t('copied');
+    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = t('copy'); }, 1500);
+  }
+}
+
+
+// ── INSPO RENDER ────────────────────────
 
 function renderInspoProfiles() {
   const profiles = getInspoProfiles();
@@ -1073,18 +1149,101 @@ function renderInspoProfiles() {
     return `<div class="inspo-empty">${t('inspo_empty')}</div>`;
   }
 
-  return profiles.map((p, i) => `
-    <div class="inspo-card">
-      <div class="inspo-card-left">
-        <span class="inspo-platform-badge ${p.platform}">${p.platform === 'instagram' ? '📸' : p.platform === 'tiktok' ? '♪' : '🔗'}</span>
-        <div>
-          <div class="inspo-handle">${p.handle}</div>
-          ${p.fullUrl ? `<a class="inspo-link" href="${p.fullUrl}" target="_blank">${p.fullUrl}</a>` : ''}
+  return profiles.map((p, i) => {
+    const analysis = getInspoAnalysis(p);
+
+    if (analysis) {
+      const key = getInspoKey(p);
+      const ideaCount = analysis.ideas ? analysis.ideas.length : 0;
+      return `
+        <div class="inspo-card inspo-card-analyzed" data-key="${key}">
+          <div class="inspo-card-header" onclick="toggleInspoAnalysis(this)">
+            <div class="inspo-card-left">
+              <span class="inspo-platform-badge ${p.platform}">${p.platform === 'instagram' ? '📸' : p.platform === 'tiktok' ? '♪' : '🔗'}</span>
+              <div>
+                <div class="inspo-handle">${p.handle}</div>
+                <div class="inspo-meta">${analysis.profile.followers} ${t('followers').toLowerCase()} · ${loc(analysis.profile.nicheDetected)}</div>
+              </div>
+            </div>
+            <div class="inspo-card-right">
+              ${ideaCount > 0 ? `<span class="idea-tag tag-green">${ideaCount} ${ideaCount === 1 ? 'IDEA' : 'IDEAS'}</span>` : ''}
+              <span class="inspo-chevron">▼</span>
+              <button class="inspo-remove-btn" onclick="event.stopPropagation();removeInspoProfile(${i})">${t('inspo_remove')}</button>
+            </div>
+          </div>
+          <div class="inspo-analysis-body">
+            <div class="inspo-analysis-content">
+              <div class="platform-bio">${analysis.profile.bio}</div>
+              ${analysis.patterns && analysis.patterns.length > 0 ? `
+                <div class="inspo-patterns-label">${t('inspo_patterns_label')}</div>
+                <div class="inspo-patterns-grid">
+                  ${analysis.patterns.map(pat => `
+                    <div class="inspo-pattern-card">
+                      <div class="trend-icon">${pat.icon}</div>
+                      <div class="trend-title">${loc(pat.title)}</div>
+                      <div class="trend-desc">${loc(pat.desc)}</div>
+                      <span class="trend-tag ${pat.tagClass}">${loc(pat.tag)}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+            </div>
+          </div>
         </div>
+      `;
+    } else {
+      return `
+        <div class="inspo-card">
+          <div class="inspo-card-left">
+            <span class="inspo-platform-badge ${p.platform}">${p.platform === 'instagram' ? '📸' : p.platform === 'tiktok' ? '♪' : '🔗'}</span>
+            <div>
+              <div class="inspo-handle">${p.handle}</div>
+              ${p.fullUrl ? `<a class="inspo-link" href="${p.fullUrl}" target="_blank">${p.fullUrl}</a>` : ''}
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="idea-tag tag-accent">${t('inspo_pending')}</span>
+            <button class="inspo-remove-btn" onclick="removeInspoProfile(${i})">${t('inspo_remove')}</button>
+          </div>
+        </div>
+      `;
+    }
+  }).join('');
+}
+
+function renderInspoIdeas() {
+  const allIdeas = getAllInspoIdeas();
+  if (allIdeas.length === 0) return '';
+
+  const profileKeys = [...new Set(allIdeas.map(i => i._profileKey))];
+
+  return `
+    <div class="inspo-ideas-section">
+      <div class="inspo-ideas-header">
+        <span class="inspo-ideas-label">${t('inspo_ideas_title')}</span>
+        <span class="section-title-muted">${allIdeas.length} ${t('inspo_ideas_suffix')} ${profileKeys.length} ${t('inspo_profiles_word')}</span>
       </div>
-      <button class="inspo-remove-btn" onclick="removeInspoProfile(${i})">${t('inspo_remove')}</button>
+      <div class="ideas-grid">
+        ${allIdeas.map((idea, i) => `
+          <div class="idea-card">
+            <div class="idea-num">INSPO ${String(i + 1).padStart(2, '0')}</div>
+            <div class="idea-title">${loc(idea.title)}</div>
+            <div class="idea-tags">
+              <span class="idea-tag tag-accent">${t(fmtKey[idea.format] || idea.format)}</span>
+              <span class="idea-tag tag-blue">${t(platKey[idea.platform] || idea.platform)}</span>
+              <span class="idea-tag tag-${idea.color}">${t(perfKey[idea.perf] || idea.perf)}</span>
+            </div>
+            <div class="idea-desc">${loc(idea.desc)}</div>
+            <div class="inspo-attribution">
+              <span class="inspo-attribution-icon">✦</span>
+              ${t('inspo_inspired_by')} ${idea.inspiredBy}
+            </div>
+            <button class="idea-copy inspo-idea-copy" data-key="${idea._profileKey}" data-idx="${idea._srcIdx}" onclick="copyInspoIdea('${idea._profileKey}', ${idea._srcIdx})">${t('copy')}</button>
+          </div>
+        `).join('')}
+      </div>
     </div>
-  `).join('');
+  `;
 }
 
 
