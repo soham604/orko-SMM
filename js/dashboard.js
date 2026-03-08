@@ -646,9 +646,70 @@ function renderDashboard() {
       </div>
     </aside>
 
+    <!-- MOBILE PANEL -->
+    <div class="mobile-panel-overlay" id="mobile-overlay" onclick="closeMobilePanel()"></div>
+    <div class="mobile-panel" id="mobile-panel">
+      <div class="sidebar-brand">
+        <span class="logo-text">orko</span>
+        <div class="brand-divider"></div>
+        <span class="brand-sub">SOCIAL MEDIA MANAGER</span>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">${t('clients')}</div>
+        ${clients.map(([key, c]) => {
+          const ini = c.name.split(' ').map(w => w[0]).join('');
+          return `<div class="sidebar-client${key === currentClient ? ' active' : ''}" onclick="switchClient('${key}');closeMobilePanel()">
+            <div class="client-avatar">${ini}</div>
+            <div class="client-info">
+              <div class="client-name">${c.name}</div>
+              <div class="client-handle">${c.handle || c.instagram.handle}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">${t('sections')}</div>
+        <a href="#overview" onclick="closeMobilePanel()">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 1h6v6H1zM9 1h6v6H9zM1 9h6v6H1zM9 9h6v6H9z"/></svg>
+          ${t('nav_overview')}
+        </a>
+        <a href="#performance" onclick="closeMobilePanel()">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 14V6l4-4 3 3 7-4v13z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          ${t('nav_perf')}
+        </a>
+        <a href="#top-content" onclick="closeMobilePanel()">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 3h14v1H1zM1 7h14v1H1zM1 11h10v1H1z"/></svg>
+          ${t('nav_top')}
+        </a>
+        <a href="#analysis" onclick="closeMobilePanel()">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4v4l3 2"/></svg>
+          ${t('nav_analysis')}
+        </a>
+        <a href="#trends" onclick="closeMobilePanel()">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 12l4-4 3 3 7-8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          ${t('nav_trends')}
+        </a>
+        <a href="#scripts" onclick="closeMobilePanel()">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1h8a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V3a2 2 0 012-2zm1 3v1h6V4H5zm0 3v1h6V7H5zm0 3v1h4v-1H5z"/></svg>
+          ${t('nav_scripts')}
+        </a>
+        <a href="#ideas" onclick="closeMobilePanel()">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a5 5 0 013 9v2a1 1 0 01-1 1H6a1 1 0 01-1-1v-2A5 5 0 018 1zM6 14h4v1H6z"/></svg>
+          ${t('nav_ideas')}
+        </a>
+        <a href="#inspo" onclick="closeMobilePanel()">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0l2 5h5l-4 3.5 1.5 5L8 10.5 3.5 13.5 5 8.5 1 5h5z"/></svg>
+          ${t('nav_inspo')}
+        </a>
+      </nav>
+    </div>
+
     <!-- MAIN -->
     <main class="main">
       <header class="main-header">
+        <button class="mobile-hamburger" onclick="openMobilePanel()" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
         <h1><span class="status-dot"></span> ${d.name}</h1>
         <div style="display:flex;align-items:center;gap:12px">
           <span class="header-meta">${t('last_sync')}: ${new Date().toLocaleDateString(currentLang === 'fr' ? 'fr-CA' : 'en-US', {month:'short',day:'numeric',year:'numeric'})} · ${t('data_from')}</span>
@@ -899,6 +960,28 @@ function renderDashboard() {
 
   renderTable();
   initNavHighlight();
+}
+
+
+// ── MOBILE PANEL ────────────────────────
+
+function openMobilePanel() {
+  const overlay = document.getElementById('mobile-overlay');
+  const panel = document.getElementById('mobile-panel');
+  if (overlay) { overlay.style.display = 'block'; requestAnimationFrame(() => overlay.classList.add('show')); }
+  if (panel) panel.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobilePanel() {
+  const overlay = document.getElementById('mobile-overlay');
+  const panel = document.getElementById('mobile-panel');
+  if (panel) panel.classList.remove('show');
+  if (overlay) {
+    overlay.classList.remove('show');
+    setTimeout(() => { overlay.style.display = 'none'; }, 300);
+  }
+  document.body.style.overflow = '';
 }
 
 
