@@ -19,6 +19,7 @@ const TR = {
   'nav_top': { fr: 'Top Contenu', en: 'Top Content' },
   'nav_analysis': { fr: 'Analyse Contenu', en: 'Content Analysis' },
   'nav_trends': { fr: 'Analyse Tendances', en: 'Trend Analysis' },
+  'nav_avatar': { fr: 'Avatar Client', en: 'Client Avatar' },
   'nav_scripts': { fr: 'Scripts', en: 'Script Variants' },
   'nav_ideas': { fr: 'Idées Contenu', en: 'Content Ideas' },
   'nav_inspo': { fr: 'Inspiration', en: 'Inspiration' },
@@ -33,6 +34,17 @@ const TR = {
   's4_title': { fr: 'ANALYSE DE CONTENU', en: 'CONTENT ANALYSIS' },
   's5_title': { fr: 'ANALYSE DES TENDANCES', en: 'TREND ANALYSIS' },
   's5_sub': { fr: 'Tendances clés des données + transcriptions audio', en: 'Key patterns from data + audio transcripts' },
+  'sa_title': { fr: 'AVATAR CLIENT', en: 'CLIENT AVATAR' },
+  'sa_sub': { fr: 'Profil du client idéal pour la stratégie de contenu', en: 'Ideal client profile for content strategy' },
+  'avatar_age': { fr: 'Âge', en: 'Age' },
+  'avatar_occupation': { fr: 'Occupation', en: 'Occupation' },
+  'avatar_location': { fr: 'Localisation', en: 'Location' },
+  'avatar_income': { fr: 'Revenu annuel', en: 'Annual Income' },
+  'avatar_pain_points': { fr: 'POINTS DE DOULEUR', en: 'PAIN POINTS' },
+  'avatar_goals': { fr: 'OBJECTIFS & DÉSIRS', en: 'GOALS & DESIRES' },
+  'avatar_false_beliefs': { fr: 'FAUSSES CROYANCES', en: 'FALSE BELIEFS' },
+  'avatar_belief': { fr: 'Croyance', en: 'Belief' },
+  'avatar_counter': { fr: 'Contre-argument', en: 'Counter-argument' },
   's6_title': { fr: 'VARIANTES DE SCRIPTS', en: 'SCRIPT VARIANTS' },
   's6_sub': { fr: 'Basés sur l\'analyse des captions et la voix réelle du client', en: 'Based on caption analysis and client\'s real voice' },
   's7_title': { fr: 'IDÉES DE CONTENU', en: 'CONTENT IDEAS' },
@@ -631,6 +643,30 @@ const CLIENT_DATA = {
     ],
     postingDesc: {fr:'Publie en moyenne aux 2-3 jours · Meilleurs jours: Jeu-Ven · Meilleur moment: Soir',en:'Posts every 2-3 days on average · Best days: Thu-Fri · Best time: Evening'},
     langDesc: {fr:'90% français · 10% anglais — Audience principalement francophone Rive-Sud / Montréal',en:'90% French · 10% English — Primarily francophone South Shore / Montreal audience'},
+    avatar: {
+      name: 'David',
+      age: 45,
+      occupation: {fr:'Entrepreneur',en:'Entrepreneur'},
+      location: {fr:'Rive-Sud de Montréal',en:'South Shore of Montreal'},
+      income: '$500K - $1M',
+      summary: {fr:'Entrepreneur de 45 ans, Rive-Sud. Revenus 500K$-1M$/an. Dirige plusieurs entreprises (immobilier, droit ou finance). Cherche un service premium structuré pour ses transactions immobilières.',en:'45-year-old entrepreneur, South Shore. $500K-$1M/year income. Runs multiple businesses (real estate, law, or finance). Seeks premium structured service for his real estate transactions.'},
+      painPoints: [
+        { icon: '⏱️', title: {fr:'Manque de temps',en:'No time'}, desc: {fr:'Trop occupé avec ses entreprises pour gérer l\'immobilier lui-même. Chaque heure perdue = 250-500$ de valeur.',en:'Too busy with his businesses to manage real estate himself. Every lost hour = $250-500 in value.'} },
+        { icon: '🏋️', title: {fr:'Trop de responsabilités',en:'Too many responsibilities'}, desc: {fr:'Porte tout sur ses épaules — famille, business, patrimoine. Veut déléguer mais ne sait pas à qui faire confiance.',en:'Carries everything on his shoulders — family, business, legacy. Wants to delegate but doesn\'t know who to trust.'} },
+        { icon: '🔄', title: {fr:'Difficulté à déléguer',en:'Difficulty delegating'}, desc: {fr:'A du mal à lâcher le contrôle. Croit que personne ne fera le travail aussi bien que lui.',en:'Struggles to let go of control. Believes no one will do the job as well as him.'} },
+        { icon: '😤', title: {fr:'Services «premium» décevants',en:'Disappointing «premium» services'}, desc: {fr:'A déjà payé cher pour des services qui n\'ont jamais livré. Méfiant envers les promesses sans preuves.',en:'Already paid top dollar for services that never delivered. Distrustful of promises without proof.'} },
+      ],
+      goals: [
+        { icon: '🏆', title: {fr:'Service premium structuré',en:'Structured premium service'}, desc: {fr:'Veut un accompagnement clé-en-main, organisé, avec reporting clair. Zéro perte de temps.',en:'Wants turnkey, organized support with clear reporting. Zero wasted time.'} },
+        { icon: '📊', title: {fr:'Preuves concrètes & résultats',en:'Concrete proof & results'}, desc: {fr:'Exige des chiffres, témoignages et études de cas avant de s\'engager. 650 transactions = crédibilité.',en:'Demands numbers, testimonials, and case studies before committing. 650 transactions = credibility.'} },
+        { icon: '🔍', title: {fr:'Transparence totale',en:'Full transparency'}, desc: {fr:'Veut savoir exactement ce qui se passe à chaque étape. Pas de surprises, pas de zones grises.',en:'Wants to know exactly what\'s happening at every step. No surprises, no gray areas.'} },
+        { icon: '🏠', title: {fr:'Protéger l\'héritage familial',en:'Protect family legacy'}, desc: {fr:'Objectif long terme: bâtir un patrimoine solide et sécurisé pour sa famille et ses enfants.',en:'Long-term goal: build a solid, secure estate for his family and children.'} },
+      ],
+      falseBeliefs: [
+        { belief: {fr:'«Si je ne m\'en occupe pas, personne ne le fera bien»',en:'«If I don\'t handle it, no one will do it right»'}, counter: {fr:'Montrer comment la délégation à une équipe structurée (Miguel + Cynthia + adjointe + CRM) libère du temps et génère de meilleurs résultats que tout faire seul.',en:'Show how delegating to a structured team (Miguel + Cynthia + assistant + CRM) frees time and generates better results than doing everything alone.'} },
+        { belief: {fr:'«Je dois attendre le bon moment pour vendre/acheter»',en:'«I should wait for the right time to sell/buy»'}, counter: {fr:'Le timing parfait n\'existe pas. Chaque mois d\'attente coûte en opportunités perdues. Les chiffres et l\'expérience de 650 transactions le prouvent.',en:'Perfect timing doesn\'t exist. Every month of waiting costs in lost opportunities. The numbers and experience of 650 transactions prove it.'} },
+      ],
+    },
     trends: [
       { icon: '🏠', title: {fr:'Les visites haut de gamme captent David',en:'Luxury tours capture David'}, desc: {fr:'Les vidéos de visite immobilière (Carignan, Chambly, Griffintown) obtiennent 2-5x plus de vues. David, 45 ans, entrepreneur Rive-Sud, cherche des propriétés de prestige. Montrez le processus structuré, pas juste la maison.',en:'Property tour videos (Carignan, Chambly, Griffintown) get 2-5x more views. David, 45, South Shore entrepreneur, seeks luxury properties. Show the structured process, not just the house.'}, tag: {fr:'FORMAT GAGNANT',en:'WINNING FORMAT'}, tagClass: 'tag-green' },
       { icon: '📊', title: {fr:'Le contenu «preuve» convertit les décideurs',en:'«Proof» content converts decision-makers'}, desc: {fr:'David veut des preuves concrètes et des résultats mesurables avant d\'avancer. Vos 650+ transactions sont votre meilleur argument. Chiffres, témoignages, études de cas > contenu motivationnel.',en:'David wants concrete proof and measurable results before moving forward. Your 650+ transactions are your best argument. Numbers, testimonials, case studies > motivational content.'}, tag: {fr:'CONVERSION',en:'CONVERSION'}, tagClass: 'tag-blue' },
@@ -653,6 +689,100 @@ const CLIENT_DATA = {
       { title: {fr:'«Protéger ton patrimoine» — Série Héritage',en:'«Protect Your Legacy» — Heritage Series'}, format: 'Story / Talking Head', platform: 'Instagram', perf: 'High', desc: {fr:'L\'objectif long terme de David: patrimoine solide et héritage familial. Série sur comment l\'immobilier construit la sécurité financière intergénérationnelle. Ton émotionnel + stratégique.',en:'David\'s long-term goal: solid estate and family legacy. Series on how real estate builds intergenerational financial security. Emotional + strategic tone.'}, color: 'purple' },
       { title: {fr:'«Premium vs Standard» — Ce que David mérite',en:'«Premium vs Standard» — What David Deserves'}, format: 'Reel / TikTok', platform: 'Both', perf: 'Medium', desc: {fr:'David a déjà essayé des services «premium» jamais à la hauteur. Montrez la différence concrète: accompagnement structuré, reporting clair, service transparent vs. le courtier moyen. Preuves visuelles.',en:'David has tried «premium» services that never delivered. Show the concrete difference: structured support, clear reporting, transparent service vs. the average broker. Visual proof.'}, color: 'orange' },
       { title: {fr:'«Avant/Après» — Transformations qui augmentent la valeur',en:'«Before/After» — Transformations That Increase Value'}, format: 'Reel / TikTok', platform: 'Both', perf: 'High', desc: {fr:'Le duplex 3 étages (3K+ vues TT) prouve que les transformations captivent. Pour David: montrez le ROI concret — investissement réno vs. plus-value à la vente. Chiffres = crédibilité.',en:'The 3-floor duplex (3K+ TT views) proves transformations captivate. For David: show concrete ROI — reno investment vs. sale value increase. Numbers = credibility.'}, color: 'green' },
+    ],
+  },
+
+  cynthia: {
+    password: 880606923,
+    name: 'Cynthia Monzon',
+    handle: '@thecynthiamonzon',
+    title: {fr:'Courtier Immobilier | Rive-Sud & Montréal',en:'Real Estate Advisor | South Shore & Montreal'},
+    calendly: 'https://linktr.ee/miguelcynthiaremax',
+    instagram: {
+      handle: '@thecynthiamonzon',
+      followers: 1013,
+      following: 2079,
+      posts: 535,
+      bio: 'Real Estate Advisor\n📍Rive-sud & Montreal\nHelping families move with clarity & confidence\nMom. Entrepreneur. Fashion & lifestyle ✨',
+      bioLink: 'https://linktr.ee/miguelcynthiaremax',
+    },
+    tiktok: {
+      handle: '@thecynthiamonzon',
+      followers: 469,
+      videos: 160,
+      bio: '🏡 Courtier immobilier | Realtor\nRive-Sud & Montréal\nStratégie • Résultats',
+      engRate: '1.6%',
+    },
+    metrics: [
+      { label: {fr:'MOY. VUES TIKTOK',en:'AVG TIKTOK VIEWS'}, value: '2,160', sub: {fr:'par vidéo',en:'per video'}, tag: {fr:'Vues',en:'Views'}, color: 'green' },
+      { label: {fr:'MOY. LIKES TIKTOK',en:'AVG TIKTOK LIKES'}, value: '32', sub: {fr:'par vidéo',en:'per video'}, tag: '1.6%', color: 'green' },
+      { label: {fr:'MOY. VUES IG REELS',en:'AVG IG REEL VIEWS'}, value: '1,276', sub: {fr:'par Reel (38 vidéos)',en:'per Reel (38 videos)'}, tag: {fr:'Croissance',en:'Growth'}, color: 'green' },
+      { label: {fr:'MOY. LIKES IG',en:'AVG IG LIKES'}, value: '16', sub: {fr:'par publication',en:'per post'}, tag: {fr:'Stable',en:'Stable'}, color: 'blue' },
+      { label: {fr:'ENGAGEMENT TIKTOK',en:'TIKTOK ENGAGEMENT'}, value: '1.6%', sub: {fr:'likes+commentaires/vues',en:'likes+comments/views'}, tag: {fr:'Bon',en:'Good'}, color: 'green' },
+      { label: {fr:'MEILLEURS JOURS',en:'BEST DAYS'}, value: {fr:'Mar-Jeu',en:'Tue-Thu'}, sub: {fr:'publications en semaine',en:'weekday posts'}, tag: {fr:'Tendance',en:'Trend'}, color: 'blue' },
+      { label: {fr:'TOP VUES (VIRAL)',en:'TOP VIEWS (VIRAL)'}, value: '31,967', sub: {fr:'IG — erreurs à éviter',en:'IG — mistakes to avoid'}, tag: {fr:'Record',en:'Record'}, color: 'green' },
+      { label: {fr:'MULTI-PLATEFORME',en:'CROSS-PLATFORM'}, value: '~1.5K', sub: {fr:'abonnés combinés',en:'combined followers'}, tag: {fr:'En croissance',en:'Growing'}, color: 'blue' },
+    ],
+    topContent: [
+      { rank: 1, platform: 'Instagram', date: '2025-02-04', topic: {fr:'Erreurs à éviter avant de vendre (virale)',en:'Mistakes to avoid before selling (viral)'}, views: 31967, likes: 108, shares: null, comments: 2, engagement: 0.3 },
+      { rank: 2, platform: 'TikTok', date: '2025-02-03', topic: {fr:'5 erreurs avant d\'acheter une maison',en:'5 mistakes before buying a house'}, views: 30600, likes: 105, shares: 20, comments: 4, engagement: 0.4 },
+      { rank: 3, platform: 'TikTok', date: '2025-03-18', topic: {fr:'Ce qu\'on ne te dit pas — première maison',en:'What nobody tells you — first home'}, views: 17500, likes: 55, shares: 10, comments: 22, engagement: 0.4 },
+      { rank: 4, platform: 'TikTok', date: '2026-01-12', topic: {fr:'Devenir maman à 21 ans — histoire personnelle',en:'Becoming a mom at 21 — personal story'}, views: 14600, likes: 512, shares: 17, comments: 23, engagement: 3.7 },
+      { rank: 5, platform: 'TikTok', date: '2025-10-07', topic: {fr:'8 choses à ne jamais faire dans ta maison',en:'8 things to never do in your home'}, views: 14600, likes: 24, shares: 3, comments: 2, engagement: 0.2 },
+      { rank: 6, platform: 'Instagram', date: '2025-12-02', topic: {fr:'Erreurs acheteurs — retour d\'expérience',en:'Buyer mistakes — real experience'}, views: 5882, likes: 20, shares: null, comments: 2, engagement: 0.4 },
+      { rank: 7, platform: 'TikTok', date: '2025-12-08', topic: {fr:'Maison à vendre — 3400 Lareau Carignan',en:'Home for sale — 3400 Lareau Carignan'}, views: 3120, likes: 46, shares: 12, comments: 13, engagement: 1.9 },
+      { rank: 8, platform: 'TikTok', date: '2026-01-25', topic: {fr:'Parents jeunes — sacrifices et résilience',en:'Young parents — sacrifice and resilience'}, views: 2925, likes: 80, shares: 6, comments: 6, engagement: 2.9 },
+      { rank: 9, platform: 'Instagram', date: '2026-03-03', topic: {fr:'Duplex agrandi 3 étages — 5 chambres',en:'Expanded duplex 3 floors — 5 beds'}, views: 1709, likes: 39, shares: null, comments: 4, engagement: 2.5 },
+      { rank: 10, platform: 'TikTok', date: '2026-01-30', topic: {fr:'Millennial realtor — danse virale',en:'Millennial realtor — viral dance'}, views: 1671, likes: 37, shares: 5, comments: 5, engagement: 2.5 },
+      { rank: 11, platform: 'TikTok', date: '2026-02-20', topic: {fr:'Maison à vendre — 8 rue de Brome',en:'Home for sale — 8 rue de Brome'}, views: 1314, likes: 31, shares: 4, comments: 2, engagement: 2.5 },
+      { rank: 12, platform: 'Instagram', date: '2026-01-30', topic: {fr:'Millennial realtor — danse maison',en:'Millennial realtor — house dance'}, views: 1273, likes: 9, shares: null, comments: 2, engagement: 0.9 },
+      { rank: 13, platform: 'TikTok', date: '2025-12-24', topic: {fr:'Millennial mom — danse de Noël',en:'Millennial mom — Christmas dance'}, views: 1176, likes: 39, shares: 1, comments: 3, engagement: 3.6 },
+      { rank: 14, platform: 'Instagram', date: '2026-01-25', topic: {fr:'Maison 3400 Lareau sur Centris',en:'House 3400 Lareau on Centris'}, views: 1213, likes: 10, shares: null, comments: 2, engagement: 1.0 },
+      { rank: 15, platform: 'TikTok', date: '2025-09-10', topic: {fr:'Tu n\'as pas besoin de courtier si...',en:'You don\'t need a broker if...'}, views: 901, likes: 17, shares: 1, comments: 2, engagement: 2.1 },
+    ],
+    contentPillars: [
+      { name: {fr:'Immobilier / Éducation Acheteurs',en:'Real Estate / Buyer Education'}, pct: 40, color: 'green' },
+      { name: {fr:'Maman & Famille / Authenticité',en:'Mom & Family / Authenticity'}, pct: 25, color: 'blue' },
+      { name: {fr:'Couple Courtiers (Miguel & Cynthia)',en:'Broker Couple (Miguel & Cynthia)'}, pct: 15, color: 'purple' },
+      { name: {fr:'Lifestyle & Tendances',en:'Lifestyle & Trends'}, pct: 12, color: 'orange' },
+      { name: {fr:'Mindset & Entrepreneuriat',en:'Mindset & Entrepreneurship'}, pct: 8, color: 'pink' },
+    ],
+    hashtags: [
+      { tag: '#immobilier', count: 55 },
+      { tag: '#famille', count: 22 },
+      { tag: '#migueletcynthia', count: 20 },
+      { tag: '#montreal', count: 18 },
+      { tag: '#maison', count: 17 },
+      { tag: '#maman', count: 8 },
+      { tag: '#fyp', count: 8 },
+      { tag: '#courtiers', count: 7 },
+      { tag: '#mindset', count: 7 },
+      { tag: '#couplecourtier', count: 4 },
+    ],
+    postingDesc: {fr:'Publie ~1x/semaine · Meilleurs jours: Mar-Jeu · Cross-post IG+TT fréquent',en:'Posts ~1x/week · Best days: Tue-Thu · Frequent IG+TT cross-posting'},
+    langDesc: {fr:'52% français · 48% bilingue FR/EN — Audience francophone et anglophone Rive-Sud / Montréal',en:'52% French · 48% bilingual FR/EN — French and English audience South Shore / Montreal'},
+    trends: [
+      { icon: '📚', title: {fr:'Le contenu éducatif = virality machine',en:'Educational content = virality machine'}, desc: {fr:'Les posts «erreurs à éviter» et «conseils acheteurs» dominent avec 8,076 vues en moyenne — 4x plus que les autres formats. Le public veut apprendre avant d\'acheter. Continuez à éduquer.',en:'Posts about «mistakes to avoid» and «buyer tips» dominate with 8,076 avg views — 4x more than other formats. The audience wants to learn before buying. Keep educating.'}, tag: {fr:'FORMAT GAGNANT',en:'WINNING FORMAT'}, tagClass: 'tag-green' },
+      { icon: '👩‍👧', title: {fr:'L\'authenticité «maman» génère l\'engagement',en:'«Mom» authenticity drives engagement'}, desc: {fr:'Le post «Devenir maman à 21 ans» = 14,600 vues + 512 likes + 3.7% engagement. Quand Cynthia partage son histoire personnelle de maman/entrepreneure, l\'audience se connecte émotionnellement.',en:'The «Becoming a mom at 21» post = 14,600 views + 512 likes + 3.7% engagement. When Cynthia shares her personal mom/entrepreneur story, the audience connects emotionally.'}, tag: {fr:'ENGAGEMENT FORT',en:'HIGH ENGAGEMENT'}, tagClass: 'tag-blue' },
+      { icon: '🏠', title: {fr:'Les visites de propriétés captent l\'attention',en:'Property tours capture attention'}, desc: {fr:'Carignan (3,120 TT + 1,213 IG), Chambly, Mercier — les visites cross-postées IG+TT doublent la portée. Le duplex 3 étages (1,709 IG) montre que les propriétés visuelles fonctionnent bien.',en:'Carignan (3,120 TT + 1,213 IG), Chambly, Mercier — cross-posted tours on IG+TT double the reach. The 3-floor duplex (1,709 IG) shows visual properties perform well.'}, tag: {fr:'CROSS-PLATFORM',en:'CROSS-PLATFORM'}, tagClass: 'tag-purple' },
+      { icon: '💃', title: {fr:'Les tendances lifestyle = entrée dans l\'algorithme',en:'Lifestyle trends = algorithm entry point'}, desc: {fr:'Les danses millennial, trends de Noël et contenu mode génèrent 3,048 vues en moyenne. Ces formats légers attirent de nouveaux abonnés qui découvrent ensuite le contenu immobilier.',en:'Millennial dances, Christmas trends, and fashion content average 3,048 views. These light formats attract new followers who then discover the real estate content.'}, tag: {fr:'DÉCOUVERTE',en:'DISCOVERY'}, tagClass: 'tag-orange' },
+    ],
+    scripts: [
+      { num: '01', title: {fr:'«Les erreurs qui coûtent cher» — Éducation acheteurs',en:'«Costly Mistakes» — Buyer Education'}, hook: {fr:'Personne ne te dit ça avant d\'acheter ta première maison... mais ça devrait.',en:'Nobody tells you this before buying your first home... but they should.'}, structure: {fr:'Accroche choc (phrase réelle Cynthia) → Liste 3-5 erreurs concrètes → Explication rapide de chaque erreur → «Si tu veux éviter ces erreurs...» → CTA DM',en:'Shock hook (Cynthia\'s real phrase) → List 3-5 concrete mistakes → Quick explanation of each → «If you want to avoid these mistakes...» → CTA DM'}, cta: {fr:'Sauvegarde ce post et écris-nous en DM 📩🏡',en:'Save this post and DM us 📩🏡'}, why: {fr:'Votre format #1 en viralité (31K+ vues IG, 30K+ TT). Le contenu éducatif «erreurs à éviter» génère 4x plus de vues que tout autre format. Continuez à exploiter cette formule gagnante.',en:'Your #1 viral format (31K+ IG views, 30K+ TT). Educational «mistakes to avoid» content generates 4x more views than any other format. Keep exploiting this winning formula.'} },
+      { num: '02', title: {fr:'«Maman à 21 ans, courtière à 25» — Histoire authentique',en:'«Mom at 21, Broker at 25» — Authentic Story'}, hook: {fr:'Devenir maman à 21 ans, c\'était pas facile. Les jugements étaient là. Mais aujourd\'hui...',en:'Becoming a mom at 21 wasn\'t easy. The judgment was there. But today...'}, structure: {fr:'Accroche vulnérable (mot pour mot Cynthia) → Le parcours: jugements, sacrifices, résilience → Transition vers l\'immobilier → Ce que la maternité a enseigné sur le business → Message inspirant → CTA',en:'Vulnerable hook (Cynthia\'s exact words) → The journey: judgment, sacrifice, resilience → Transition to real estate → What motherhood taught about business → Inspiring message → CTA'}, cta: {fr:'Tag une maman qui se bat chaque jour 💪🏡',en:'Tag a mom who fights every day 💪🏡'}, why: {fr:'14,600 vues + 512 likes + 3.7% engagement = votre post le plus engageant. L\'authenticité maman-entrepreneure crée une connexion émotionnelle que l\'immobilier seul ne peut pas générer.',en:'14,600 views + 512 likes + 3.7% engagement = your most engaging post. Mom-entrepreneur authenticity creates an emotional connection that real estate alone can\'t generate.'} },
+      { num: '03', title: {fr:'Visite Propriété — Processus familial',en:'Property Tour — Family-Friendly Process'}, hook: {fr:'Cette maison, c\'est exactement ce qu\'une famille cherche. [Ville]. [Prix]$. Et mes clients l\'ont eue en toute confiance.',en:'This home is exactly what a family needs. [City]. [Price]$. And my clients got it with full confidence.'}, structure: {fr:'Reveal propriété (style visuel, ambiance familiale) → Détails clés (chambres, espaces, quartier) → Pourquoi cette maison est parfaite pour une famille → «Helping families move with clarity & confidence» → CTA',en:'Property reveal (visual style, family-friendly vibe) → Key details (bedrooms, spaces, neighborhood) → Why this home is perfect for a family → «Helping families move with clarity & confidence» → CTA'}, cta: {fr:'DM «🏡» pour la fiche complète 📩',en:'DM «🏡» for the full listing sheet 📩'}, why: {fr:'Les visites cross-postées IG+TT doublent la portée (Carignan: 3,120 TT + 1,213 IG). L\'angle «famille» différencie Cynthia de Miguel — focalisez sur la clarté et la confiance.',en:'Cross-posted tours IG+TT double reach (Carignan: 3,120 TT + 1,213 IG). The «family» angle differentiates Cynthia from Miguel — focus on clarity and confidence.'} },
+      { num: '04', title: {fr:'«Tu n\'as pas besoin de courtier si...» — Mythe vs Réalité',en:'«You Don\'t Need a Broker If...» — Myth vs Reality'}, hook: {fr:'Tu n\'as pas besoin de courtier si... tu veux tout gérer seul(e), perdre du temps et risquer de l\'argent.',en:'You don\'t need a broker if... you want to manage everything alone, waste time, and risk money.'}, structure: {fr:'Accroche provocatrice → Liste ironique des «raisons» de ne pas prendre de courtier → Retournement: la réalité de ce que ça implique → Valeur ajoutée concrète d\'un courtier → «C\'est pour ça qu\'on est là» → CTA',en:'Provocative hook → Ironic list of «reasons» not to use a broker → Twist: the reality of what it entails → Concrete added value of a broker → «That\'s why we\'re here» → CTA'}, cta: {fr:'Écris-nous à equipemiguelcynthia@gmail.com 📩',en:'Write us at equipemiguelcynthia@gmail.com 📩'}, why: {fr:'Ce format provocateur (901 vues TT) attire l\'attention en cassant les attentes. Le contenu «mythe vs réalité» est très partageable et positionne Cynthia comme experte accessible.',en:'This provocative format (901 TT views) attracts attention by breaking expectations. «Myth vs reality» content is highly shareable and positions Cynthia as an accessible expert.'} },
+      { num: '05', title: {fr:'Miguel & Cynthia — Couple, parents, courtiers',en:'Miguel & Cynthia — Couple, parents, brokers'}, hook: {fr:'On est devenus parents très jeunes. Une vie différente, du jugement, des sacrifices. Mais aujourd\'hui, on bâtit quelque chose ensemble.',en:'We became parents very young. A different life, judgment, sacrifices. But today, we\'re building something together.'}, structure: {fr:'Accroche couple (phrase réelle Cynthia) → L\'histoire: parents jeunes, sacrifices → Comment on a bâti une équipe en couple → Les rôles clairs qui font que ça marche → «Ce qui fait durer un couple...» → CTA',en:'Couple hook (Cynthia\'s real phrase) → The story: young parents, sacrifices → How we built a team as a couple → Clear roles that make it work → «What makes a couple last...» → CTA'}, cta: {fr:'Tag ton/ta partenaire qui comprend! 😂🏡',en:'Tag your partner who gets it! 😂🏡'}, why: {fr:'Le contenu couple génère le meilleur engagement (2.9% pour «parents jeunes»). Cette perspective féminine/maternelle complète celle de Miguel et renforce l\'image du duo familial de confiance.',en:'Couple content generates the best engagement (2.9% for «young parents»). This feminine/maternal perspective complements Miguel\'s and reinforces the trustworthy family duo image.'} },
+    ],
+    ideas: [
+      { title: {fr:'Série «Erreurs Coûteuses» — Acheteurs & Vendeurs',en:'«Costly Mistakes» Series — Buyers & Sellers'}, format: 'Reel / TikTok', platform: 'Both', perf: 'High', desc: {fr:'Votre format viral #1 (31K+ vues). Série récurrente: 3-5 erreurs par vidéo, alternant acheteurs et vendeurs. Format éducatif sauvegardable et partageable.',en:'Your #1 viral format (31K+ views). Recurring series: 3-5 mistakes per video, alternating buyers and sellers. Saveable and shareable educational format.'}, color: 'green' },
+      { title: {fr:'«Mon parcours» — Maman entrepreneure authentique',en:'«My Journey» — Authentic Mom Entrepreneur'}, format: 'Talking Head', platform: 'Both', perf: 'High', desc: {fr:'512 likes sur un seul post (record). Partagez les coulisses de votre vie de maman-courtière: les sacrifices, les victoires, les moments vrais. L\'authenticité = connexion.',en:'512 likes on a single post (record). Share behind-the-scenes of your mom-broker life: sacrifices, wins, real moments. Authenticity = connection.'}, color: 'green' },
+      { title: {fr:'Visites Propriétés — Angle familial',en:'Property Tours — Family Angle'}, format: 'Reel / TikTok', platform: 'Both', perf: 'High', desc: {fr:'Cross-postez chaque visite IG+TT pour doubler la portée. Focus: quartiers familiaux, espaces pour enfants, écoles à proximité. «Helping families move with clarity & confidence.»',en:'Cross-post every tour on IG+TT to double reach. Focus: family neighborhoods, spaces for kids, nearby schools. «Helping families move with clarity & confidence.»'}, color: 'green' },
+      { title: {fr:'«Ce qu\'on ne te dit pas» — Série transparence',en:'«What Nobody Tells You» — Transparency Series'}, format: 'Reel / TikTok', platform: 'TikTok first', perf: 'High', desc: {fr:'17,500 vues sur ce format. Partagez les vérités cachées du marché immobilier. Chaque vidéo = une surprise que les acheteurs/vendeurs ne connaissent pas. Fort potentiel de sauvegarde.',en:'17,500 views on this format. Share hidden truths about the real estate market. Each video = a surprise buyers/sellers don\'t know. High save potential.'}, color: 'green' },
+      { title: {fr:'Tendances & Danses — Entrée dans l\'algorithme',en:'Trends & Dances — Algorithm Entry Point'}, format: 'Reel / TikTok', platform: 'Both', perf: 'Medium', desc: {fr:'Les trends lifestyle (3,048 vues moy.) attirent de nouveaux abonnés. Utilisez-les comme porte d\'entrée vers le contenu immobilier. 1-2x par mois maximum.',en:'Lifestyle trends (3,048 avg views) attract new followers. Use them as an entry point to real estate content. 1-2x per month maximum.'}, color: 'blue' },
+      { title: {fr:'«Mythe vs Réalité» — Immobilier démystifié',en:'«Myth vs Reality» — Real Estate Demystified'}, format: 'Reel / TikTok', platform: 'Both', perf: 'High', desc: {fr:'«Tu n\'as pas besoin de courtier si...» — ce format provocateur attire l\'attention. Série de mythes courants: mise de fonds, inspection, négociation, etc.',en:'«You don\'t need a broker if...» — this provocative format grabs attention. Series of common myths: down payment, inspection, negotiation, etc.'}, color: 'blue' },
+      { title: {fr:'Couple Courtiers — Coulisses et dynamique',en:'Broker Couple — Behind the Scenes & Dynamic'}, format: 'Lifestyle / Fun', platform: 'Both', perf: 'High', desc: {fr:'Le contenu couple (2.9% engagement) connecte. Montrez comment Miguel & Cynthia gèrent famille + immobilier ensemble. L\'humour et l\'authenticité = fidélisation.',en:'Couple content (2.9% engagement) connects. Show how Miguel & Cynthia manage family + real estate together. Humor and authenticity = loyalty.'}, color: 'blue' },
+      { title: {fr:'«Checklist Premier Achat» — Guide sauvegardable',en:'«First-Time Buyer Checklist» — Saveable Guide'}, format: 'Reel / TikTok', platform: 'Instagram first', perf: 'High', desc: {fr:'Les guides pratiques sont les plus sauvegardés. Créez une checklist visuelle pour premiers acheteurs: budget, pré-approbation, inspection, notaire. Contenu référence.',en:'Practical guides are the most saved. Create a visual checklist for first-time buyers: budget, pre-approval, inspection, notary. Reference content.'}, color: 'green' },
     ],
   },
 };
@@ -792,6 +922,10 @@ function renderDashboard() {
   const app = document.getElementById('app');
   const clients = Object.entries(CLIENT_DATA);
   const initials = d.name.split(' ').map(w => w[0]).join('');
+  const hasAvatar = !!d.avatar;
+  const scriptNum = hasAvatar ? '07' : '06';
+  const ideasNum = hasAvatar ? '08' : '07';
+  const inspoNum = hasAvatar ? '09' : '08';
 
   app.innerHTML = `
     <!-- SIDEBAR -->
@@ -838,6 +972,10 @@ function renderDashboard() {
           <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 12l4-4 3 3 7-8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           ${t('nav_trends')}
         </a>
+        ${d.avatar ? `<a href="#avatar">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a4 4 0 014 4 4 4 0 01-4 4 4 4 0 01-4-4 4 4 0 014-4zM2 14s0-4 6-4 6 4 6 4H2z"/></svg>
+          ${t('nav_avatar')}
+        </a>` : ''}
         <a href="#scripts">
           <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1h8a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V3a2 2 0 012-2zm1 3v1h6V4H5zm0 3v1h6V7H5zm0 3v1h4v-1H5z"/></svg>
           ${t('nav_scripts')}
@@ -900,6 +1038,10 @@ function renderDashboard() {
           <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M1 12l4-4 3 3 7-8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           ${t('nav_trends')}
         </a>
+        ${d.avatar ? `<a href="#avatar" onclick="closeMobilePanel()">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a4 4 0 014 4 4 4 0 01-4 4 4 4 0 01-4-4 4 4 0 014-4zM2 14s0-4 6-4 6 4 6 4H2z"/></svg>
+          ${t('nav_avatar')}
+        </a>` : ''}
         <a href="#scripts" onclick="closeMobilePanel()">
           <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M4 1h8a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V3a2 2 0 012-2zm1 3v1h6V4H5zm0 3v1h6V7H5zm0 3v1h4v-1H5z"/></svg>
           ${t('nav_scripts')}
@@ -1084,10 +1226,89 @@ function renderDashboard() {
           </div>
         </div>
 
-        <!-- 6. SCRIPT VARIANTS -->
-        <div class="section" id="scripts">
+        ${hasAvatar ? `
+        <!-- 6. CLIENT AVATAR -->
+        <div class="section" id="avatar">
           <div class="section-header">
             <span class="section-number">06</span>
+            <span class="section-title">${t('sa_title')}</span>
+            <span class="section-title-muted">${t('sa_sub')}</span>
+          </div>
+
+          <div class="avatar-profile-card">
+            <div class="avatar-identity">
+              <div class="avatar-icon-large">${d.avatar.name[0]}</div>
+              <div class="avatar-identity-info">
+                <div class="avatar-name">${d.avatar.name}</div>
+                <div class="avatar-summary">${loc(d.avatar.summary)}</div>
+              </div>
+            </div>
+            <div class="avatar-stats-row">
+              <div class="avatar-stat">
+                <div class="avatar-stat-label">${t('avatar_age')}</div>
+                <div class="avatar-stat-value">${d.avatar.age} ${t('avatar_age').toLowerCase() === 'âge' ? 'ans' : 'y/o'}</div>
+              </div>
+              <div class="avatar-stat">
+                <div class="avatar-stat-label">${t('avatar_occupation')}</div>
+                <div class="avatar-stat-value">${loc(d.avatar.occupation)}</div>
+              </div>
+              <div class="avatar-stat">
+                <div class="avatar-stat-label">${t('avatar_location')}</div>
+                <div class="avatar-stat-value">${loc(d.avatar.location)}</div>
+              </div>
+              <div class="avatar-stat">
+                <div class="avatar-stat-label">${t('avatar_income')}</div>
+                <div class="avatar-stat-value">${d.avatar.income}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="avatar-grid">
+            <div class="avatar-card">
+              <div class="avatar-card-title">${t('avatar_pain_points')}</div>
+              <div class="avatar-items">
+                ${d.avatar.painPoints.map(p => `
+                <div class="avatar-item">
+                  <div class="avatar-item-icon">${p.icon}</div>
+                  <div class="avatar-item-content">
+                    <div class="avatar-item-title">${loc(p.title)}</div>
+                    <div class="avatar-item-desc">${loc(p.desc)}</div>
+                  </div>
+                </div>`).join('')}
+              </div>
+            </div>
+            <div class="avatar-card">
+              <div class="avatar-card-title">${t('avatar_goals')}</div>
+              <div class="avatar-items">
+                ${d.avatar.goals.map(g => `
+                <div class="avatar-item">
+                  <div class="avatar-item-icon">${g.icon}</div>
+                  <div class="avatar-item-content">
+                    <div class="avatar-item-title">${loc(g.title)}</div>
+                    <div class="avatar-item-desc">${loc(g.desc)}</div>
+                  </div>
+                </div>`).join('')}
+              </div>
+            </div>
+          </div>
+
+          <div class="avatar-beliefs">
+            <div class="avatar-card-title">${t('avatar_false_beliefs')}</div>
+            ${d.avatar.falseBeliefs.map(fb => `
+            <div class="avatar-belief-card">
+              <div class="avatar-belief-label">${t('avatar_belief')}</div>
+              <div class="avatar-belief-text">${loc(fb.belief)}</div>
+              <div class="avatar-counter-label">${t('avatar_counter')}</div>
+              <div class="avatar-counter-text">${loc(fb.counter)}</div>
+            </div>`).join('')}
+          </div>
+        </div>
+        ` : ''}
+
+        <!-- SCRIPT VARIANTS -->
+        <div class="section" id="scripts">
+          <div class="section-header">
+            <span class="section-number">${scriptNum}</span>
             <span class="section-title">${t('s6_title')}</span>
             <span class="section-title-muted">${t('s6_sub')}</span>
           </div>
@@ -1127,7 +1348,7 @@ function renderDashboard() {
         <!-- 7. CONTENT IDEAS -->
         <div class="section" id="ideas">
           <div class="section-header">
-            <span class="section-number">07</span>
+            <span class="section-number">${ideasNum}</span>
             <span class="section-title">${t('s7_title')}</span>
             <span class="section-title-muted">${d.ideas.length} ${t('s7_sub_suffix')}</span>
           </div>
@@ -1150,7 +1371,7 @@ function renderDashboard() {
         <!-- 8. INSPIRATION -->
         <div class="section" id="inspo">
           <div class="section-header">
-            <span class="section-number">08</span>
+            <span class="section-number">${inspoNum}</span>
             <span class="section-title">${t('s8_title')}</span>
             <span class="section-title-muted">${t('s8_sub')}</span>
           </div>

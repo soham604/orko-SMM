@@ -757,6 +757,7 @@ body {
 .tag-orange { background: var(--orange-dim); color: var(--orange); }
 .tag-blue { background: var(--blue-dim); color: var(--blue); }
 .tag-accent { background: var(--accent-dim); color: var(--accent); }
+.tag-purple { background: rgba(155, 89, 182, 0.10); color: #b07ee8; }
 
 /* ========================================
    TABLE
@@ -1106,6 +1107,194 @@ body {
   font-size: 9.5px;
   font-weight: 600;
   letter-spacing: 0.5px;
+}
+
+/* ========================================
+   AVATAR / CLIENT PERSONA
+   ======================================== */
+
+.avatar-profile-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.avatar-identity {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.avatar-icon-large {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-h);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.avatar-identity-info { flex: 1; }
+
+.avatar-name {
+  font-family: var(--font-h);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.avatar-summary {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.avatar-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.avatar-stat {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+}
+
+.avatar-stat-label {
+  font-family: var(--font-data);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+}
+
+.avatar-stat-value {
+  font-family: var(--font-data);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.avatar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+}
+
+.avatar-card-title {
+  font-family: var(--font-data);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.avatar-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.avatar-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.avatar-item-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.avatar-item-title {
+  font-family: var(--font-h);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.avatar-item-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.avatar-beliefs {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+}
+
+.avatar-belief-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.avatar-belief-label {
+  font-family: var(--font-data);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--red);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+
+.avatar-belief-text {
+  font-family: var(--font-h);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.avatar-counter-label {
+  font-family: var(--font-data);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+}
+
+.avatar-counter-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 /* ========================================
@@ -1912,6 +2101,8 @@ body {
   .metrics-grid { grid-template-columns: repeat(2, 1fr); }
   .ideas-grid { grid-template-columns: repeat(2, 1fr); }
   .trend-grid { grid-template-columns: 1fr; }
+  .avatar-grid { grid-template-columns: 1fr; }
+  .avatar-stats-row { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 860px) {
@@ -2059,6 +2250,14 @@ body {
   .trend-card .trend-title {
     font-size: 14px;
   }
+
+  /* Avatar */
+  .avatar-profile-card { padding: 16px; }
+  .avatar-card { padding: 16px; }
+  .avatar-beliefs { padding: 16px; }
+  .avatar-identity { flex-direction: column; text-align: center; }
+  .avatar-stats-row { grid-template-columns: repeat(2, 1fr); }
+  .avatar-grid { grid-template-columns: 1fr; }
 
   /* Scripts */
   .script-header {
