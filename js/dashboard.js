@@ -34,7 +34,7 @@ const TR = {
   's5_title': { fr: 'ANALYSE DES TENDANCES', en: 'TREND ANALYSIS' },
   's5_sub': { fr: 'Tendances clés des données + transcriptions audio', en: 'Key patterns from data + audio transcripts' },
   's6_title': { fr: 'VARIANTES DE SCRIPTS', en: 'SCRIPT VARIANTS' },
-  's6_sub': { fr: 'Basés sur les transcriptions réelles de Sam', en: 'Based on Sam\'s real voice transcripts' },
+  's6_sub': { fr: 'Basés sur l\'analyse de contenu', en: 'Based on content analysis' },
   's7_title': { fr: 'IDÉES DE CONTENU', en: 'CONTENT IDEAS' },
   's7_sub_suffix': { fr: 'nouvelles idées basées sur l\'analyse', en: 'new ideas based on analysis' },
   's8_title': { fr: 'INSPIRATION', en: 'INSPIRATION' },
@@ -82,6 +82,13 @@ const TR = {
   'm_good': { fr: 'Bon', en: 'Good' },
   'm_high': { fr: 'Élevé', en: 'High' },
   'm_views': { fr: 'Vues', en: 'Views' },
+
+  // Password
+  'pw_select': { fr: 'Choisir un client', en: 'Select a client' },
+  'pw_title': { fr: 'Accès Client', en: 'Client Access' },
+  'pw_placeholder': { fr: 'Mot de passe', en: 'Password' },
+  'pw_submit': { fr: 'Entrer', en: 'Enter' },
+  'pw_error': { fr: 'Mot de passe incorrect', en: 'Incorrect password' },
 
   // Table headers
   'th_platform': { fr: 'Plateforme', en: 'Platform' },
@@ -243,13 +250,107 @@ function toggleLang() {
 // ── CLIENT STATE ────────────────────────
 
 let currentClient = 'maxime';
+const unlockedClients = new Set();
+
+function _hash(str) {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) + h) + str.charCodeAt(i);
+  return h >>> 0;
+}
 
 function switchClient(key) {
+  if (!unlockedClients.has(key)) {
+    showPasswordModal(key);
+    return;
+  }
   currentClient = key;
   sortCol = 'views';
   sortDir = -1;
   renderDashboard();
   window.scrollTo(0, 0);
+}
+
+function showPasswordModal(clientKey) {
+  const c = CLIENT_DATA[clientKey];
+  const ini = c.name.split(' ').map(w => w[0]).join('');
+  let existing = document.getElementById('pw-overlay');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'pw-overlay';
+  overlay.className = 'pw-overlay';
+  overlay.innerHTML = `
+    <div class="pw-modal">
+      <div class="pw-brand">orko</div>
+      <div class="pw-avatar">${ini}</div>
+      <div class="pw-client-name">${c.name}</div>
+      <div class="pw-title">${t('pw_title')}</div>
+      <input type="password" class="pw-input" id="pw-input" placeholder="${t('pw_placeholder')}" autocomplete="off" />
+      <div class="pw-error" id="pw-error"></div>
+      <button class="pw-btn" onclick="verifyPassword('${clientKey}')">${t('pw_submit')}</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const input = document.getElementById('pw-input');
+  input.focus();
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') verifyPassword(clientKey);
+  });
+}
+
+function verifyPassword(clientKey) {
+  const input = document.getElementById('pw-input');
+  const error = document.getElementById('pw-error');
+  const val = input.value;
+
+  if (_hash(val) === CLIENT_DATA[clientKey].password) {
+    unlockedClients.add(clientKey);
+    const overlay = document.getElementById('pw-overlay');
+    if (overlay) overlay.remove();
+    currentClient = clientKey;
+    sortCol = 'views';
+    sortDir = -1;
+    renderDashboard();
+    window.scrollTo(0, 0);
+  } else {
+    error.textContent = t('pw_error');
+    input.value = '';
+    input.focus();
+    input.classList.add('pw-input-shake');
+    setTimeout(() => input.classList.remove('pw-input-shake'), 400);
+  }
+}
+
+function closePasswordModal() {
+  const overlay = document.getElementById('pw-overlay');
+  if (overlay) overlay.remove();
+}
+
+function showClientPicker() {
+  const clients = Object.entries(CLIENT_DATA);
+  const overlay = document.createElement('div');
+  overlay.id = 'pw-overlay';
+  overlay.className = 'pw-overlay';
+  overlay.innerHTML = `
+    <div class="pw-modal pw-picker">
+      <div class="pw-brand">orko</div>
+      <div class="pw-title">${t('pw_select')}</div>
+      <div class="pw-client-list">
+        ${clients.map(([key, c]) => {
+          const ini = c.name.split(' ').map(w => w[0]).join('');
+          return `<div class="pw-client-option" onclick="closePasswordModal();showPasswordModal('${key}')">
+            <div class="pw-client-option-avatar">${ini}</div>
+            <div class="pw-client-option-info">
+              <div class="pw-client-option-name">${c.name}</div>
+              <div class="pw-client-option-handle">${c.handle}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
 }
 
 /** Resolve a bilingual {fr,en} object or fall back to a TR key */
@@ -262,6 +363,7 @@ function loc(val, fallbackKey) {
 
 const CLIENT_DATA = {
   maxime: {
+    password: 573644316,
     name: 'Maxime Belma',
     handle: '@max_real_estate',
     title: 'Courtier Immobilier',
@@ -361,6 +463,7 @@ const CLIENT_DATA = {
   },
 
   sam: {
+    password: 456665692,
     name: 'Sam Auran',
     handle: '@sam_auran',
     title: {fr:'Entrepreneur Fitness',en:'Fitness Entrepreneur'},
@@ -457,6 +560,96 @@ const CLIENT_DATA = {
       { title: {fr:'Ce que ma femme pense de mon obsession fitness',en:'What my wife thinks about my fitness obsession'}, format: 'Reel / TikTok', platform: 'Both', perf: 'High', desc: {fr:'Contenu couple relatable. Fort potentiel de tags et partages.',en:'Relatable couple content. High tagging and sharing potential.'}, color: 'green' },
       { title: {fr:'Routine du dimanche: foi, famille, fitness',en:'Sunday routine: faith, family, fitness'}, format: 'Lifestyle', platform: 'Instagram first', perf: 'Medium', desc: {fr:'Combine les 3 piliers de sa marque en un seul contenu cohérent.',en:'Combines all 3 brand pillars into one cohesive content piece.'}, color: 'blue' },
       { title: {fr:'Du call center (200 appels/jour) à 250M sous gestion',en:'From call center (200 calls/day) to 250M under management'}, format: 'Story', platform: 'Both', perf: 'High', desc: {fr:'Sam a partagé son origine dans 2 reels. De centre d\'appels à AEC Financial. Parcours inspirant = fort potentiel viral.',en:'Sam shared his origin story in 2 reels. From call center to AEC Financial. Inspiring journey = high viral potential.'}, color: 'green' },
+    ],
+  },
+
+  miguel: {
+    password: 2199041662,
+    name: 'Miguel Otiniano',
+    handle: '@miguel.otiniano',
+    title: {fr:'Courtier Immobilier | Rive-Sud',en:'Real Estate Broker | South Shore'},
+    calendly: 'https://linktr.ee/miguelcynthiaremax',
+    instagram: {
+      handle: '@miguel.otiniano',
+      followers: 1102,
+      following: 1764,
+      posts: 475,
+      bio: 'Courtier immobilier | Montréal - Rive-Sud 🦸‍♂️\nJ\'aide vendeurs & familles à éviter les erreurs coûteuses 🫶\n🏆+ 650 transactions | FR • EN • ES\n👇 DM «🏠»',
+    },
+    tiktok: {
+      handle: '@miguelrealtor',
+      followers: 473,
+      videos: 65,
+      bio: '🚀 Suivez-nous pour voir de l\'immobilier\nClick ici pour plus de contenu 👇🏻',
+      engRate: '3.9%',
+    },
+    metrics: [
+      { label: {fr:'Moy. Vues TikTok',en:'Avg. TikTok Views'}, value: '482', sub: {fr:'par vidéo (récent)',en:'per video (recent)'}, tag: {fr:'Vues',en:'Views'}, color: 'green' },
+      { label: {fr:'Moy. Likes TikTok',en:'Avg. TikTok Likes'}, value: '14', sub: {fr:'par vidéo',en:'per video'}, tag: '3.9%', color: 'green' },
+      { label: {fr:'Moy. Vues IG Reels',en:'Avg. IG Reels Views'}, value: '312', sub: {fr:'par Reel (50 posts)',en:'per Reel (50 posts)'}, tag: {fr:'Croissance',en:'Growing'}, color: 'blue' },
+      { label: {fr:'Moy. Likes IG',en:'Avg. IG Likes'}, value: '14', sub: {fr:'par publication',en:'per post'}, tag: {fr:'Stable',en:'Stable'}, color: 'blue' },
+      { label: {fr:'Engagement TikTok',en:'TikTok Engagement'}, value: '3.9%', sub: {fr:'likes+commentaires/vues',en:'likes+comments/views'}, tag: {fr:'Bon',en:'Good'}, color: 'green' },
+      { label: {fr:'Meilleurs Jours',en:'Best Days'}, value: {fr:'Jeu-Ven',en:'Thu-Fri'}, sub: {fr:'publications en semaine',en:'weekday posting'}, tag: {fr:'Tendance',en:'Trend'}, color: 'blue' },
+      { label: {fr:'Top Vues (viral)',en:'Peak Views (viral)'}, value: '5,039', sub: {fr:'TikTok — visite maison',en:'TikTok — house tour'}, tag: {fr:'Record',en:'Peak'}, color: 'green' },
+      { label: {fr:'Multi-plateforme',en:'Cross-platform'}, value: '~1.6K', sub: {fr:'abonnés combinés',en:'combined followers'}, tag: {fr:'En croissance',en:'Growing'}, color: 'blue' },
+    ],
+    topContent: [
+      { rank: 1, platform: 'TikTok', date: '2023-05-22', topic: {fr:'Visite maison Carignan (virale)',en:'House tour Carignan (viral)'}, views: 5039, likes: 76, shares: 21, comments: 10, engagement: 1.7 },
+      { rank: 2, platform: 'TikTok', date: '2022-11-18', topic: {fr:'Maison de Luxe — propriété prestige',en:'Luxury property showcase'}, views: 4288, likes: 149, shares: 18, comments: 1, engagement: 3.5 },
+      { rank: 3, platform: 'TikTok', date: '2026-03-04', topic: {fr:'Duplex agrandi 3 étages — 3200pi²',en:'Expanded duplex 3 floors — 3200sqft'}, views: 3066, likes: 37, shares: 9, comments: 56, engagement: 3.0 },
+      { rank: 4, platform: 'Instagram', date: '2026-03-03', topic: {fr:'Duplex agrandi 3 étages — 5 chambres',en:'Expanded duplex 3 floors — 5 beds'}, views: 1708, likes: 39, shares: null, comments: 4, engagement: 2.5 },
+      { rank: 5, platform: 'Instagram', date: '2026-01-30', topic: {fr:'Millennial realtor — danse virale',en:'Millennial realtor — viral dance'}, views: 1273, likes: 9, shares: null, comments: 0, engagement: 0.7 },
+      { rank: 6, platform: 'Instagram', date: '2026-01-25', topic: {fr:'Maison 3400 Lareau sur Centris',en:'House 3400 Lareau on Centris'}, views: 1213, likes: 10, shares: null, comments: 2, engagement: 1.0 },
+      { rank: 7, platform: 'TikTok', date: '2024-03-14', topic: {fr:'Visite maison Chambly',en:'House tour Chambly'}, views: 917, likes: 11, shares: 0, comments: 0, engagement: 1.2 },
+      { rank: 8, platform: 'TikTok', date: '2023-12-14', topic: {fr:'Qui sommes-nous? — présentation équipe',en:'Who are we? — team intro'}, views: 854, likes: 21, shares: 1, comments: 0, engagement: 2.5 },
+      { rank: 9, platform: 'TikTok', date: '2026-02-15', topic: {fr:'L\'IA ne remplacera pas les courtiers',en:'AI won\'t replace brokers'}, views: 842, likes: 16, shares: 0, comments: 4, engagement: 2.4 },
+      { rank: 10, platform: 'TikTok', date: '2023-12-31', topic: {fr:'Bilan 2023 — année se termine',en:'2023 year-end review'}, views: 809, likes: 7, shares: 1, comments: 0, engagement: 0.9 },
+      { rank: 11, platform: 'TikTok', date: '2026-03-02', topic: {fr:'Maisons premier acheteur — résilientes',en:'First-time buyer homes — resilient'}, views: 787, likes: 7, shares: 0, comments: 4, engagement: 1.4 },
+      { rank: 12, platform: 'TikTok', date: '2024-07-31', topic: {fr:'Condo Griffintown — rue des Bassins',en:'Griffintown condo — rue des Bassins'}, views: 697, likes: 14, shares: 4, comments: 2, engagement: 2.3 },
+      { rank: 13, platform: 'Instagram', date: '2026-02-27', topic: {fr:'Millennial realtor — open house muffins',en:'Millennial realtor — open house muffins'}, views: 561, likes: 22, shares: null, comments: 5, engagement: 4.8 },
+      { rank: 14, platform: 'TikTok', date: '2026-01-22', topic: {fr:'Ma mère m\'a appris à aimer et respecter',en:'My mother taught me to love and respect'}, views: 596, likes: 26, shares: 1, comments: 1, engagement: 4.5 },
+      { rank: 15, platform: 'Instagram', date: '2026-02-20', topic: {fr:'Maison à vendre — 8 rue de Brome',en:'House for sale — 8 rue de Brome'}, views: 532, likes: 10, shares: null, comments: 0, engagement: 1.9 },
+    ],
+    contentPillars: [
+      { name: {fr:'Immobilier / Listings',en:'Real Estate / Listings'}, pct: 48, color: 'green' },
+      { name: {fr:'Leadership / Mentalité',en:'Leadership / Mindset'}, pct: 16, color: 'blue' },
+      { name: {fr:'Marque Personnelle / Histoire',en:'Personal Brand / Story'}, pct: 16, color: 'purple' },
+      { name: {fr:'Conseils Business',en:'Business Tips'}, pct: 12, color: 'orange' },
+      { name: {fr:'Couple / Lifestyle',en:'Couple / Lifestyle'}, pct: 8, color: 'pink' },
+    ],
+    hashtags: [
+      { tag: '#immobilier', count: 35 },
+      { tag: '#courtierimmobilier', count: 29 },
+      { tag: '#entrepreneuriat', count: 10 },
+      { tag: '#famille', count: 10 },
+      { tag: '#equipemiguelcynthia', count: 9 },
+      { tag: '#realestate', count: 9 },
+      { tag: '#chambly', count: 8 },
+      { tag: '#maison', count: 7 },
+      { tag: '#leadership', count: 6 },
+      { tag: '#motivation', count: 5 },
+    ],
+    postingDesc: {fr:'Publie en moyenne aux 2-3 jours · Meilleurs jours: Jeu-Ven · Meilleur moment: Soir',en:'Posts every 2-3 days on average · Best days: Thu-Fri · Best time: Evening'},
+    langDesc: {fr:'90% français · 10% anglais — Audience principalement francophone Rive-Sud / Montréal',en:'90% French · 10% English — Primarily francophone South Shore / Montreal audience'},
+    trends: [
+      { title: {fr:'Les visites de maison performent le mieux',en:'House tours perform best'}, desc: {fr:'Les vidéos de visite immobilière (Carignan, Chambly, Griffintown) obtiennent 2-5x plus de vues que le contenu motivationnel. Le contenu visuel de propriété est votre format le plus viral.',en:'Property tour videos (Carignan, Chambly, Griffintown) get 2-5x more views than motivational content. Visual property content is your most viral format.'}, tag: {fr:'Format Gagnant',en:'Winning Format'}, color: 'green' },
+      { title: {fr:'Le contenu personnel/famille résonne fort',en:'Personal/family content resonates strongly'}, desc: {fr:'Les posts sur votre mère, votre couple et votre parcours personnel génèrent le meilleur taux d\'engagement (4-5%). L\'authenticité crée la connexion.',en:'Posts about your mother, couple, and personal journey generate the best engagement rate (4-5%). Authenticity creates connection.'}, tag: {fr:'Engagement Élevé',en:'High Engagement'}, color: 'blue' },
+      { title: {fr:'Le cross-posting IG+TT multiplie la portée',en:'Cross-posting IG+TT multiplies reach'}, desc: {fr:'Le duplex 3 étages a fait 3,066 vues TT + 1,708 vues IG = 4,774 vues combinées. Publier sur les deux plateformes double votre exposition.',en:'The 3-floor duplex got 3,066 TT views + 1,708 IG views = 4,774 combined. Posting on both platforms doubles your exposure.'}, tag: {fr:'Stratégie',en:'Strategy'}, color: 'purple' },
+      { title: {fr:'L\'IA et l\'éducation attirent les commentaires',en:'AI and education topics drive comments'}, desc: {fr:'Le post sur l\'IA et les courtiers a généré le plus de commentaires récents. Les sujets d\'opinion polarisants stimulent l\'interaction.',en:'The AI and brokers post generated the most recent comments. Polarizing opinion topics boost interaction.'}, tag: {fr:'Découverte',en:'Discovery'}, color: 'orange' },
+    ],
+    scripts: [
+      { num: '01', title: {fr:'Visite Propriété Coup de Cœur',en:'Dream Property Tour'}, hook: {fr:'Cette maison à [ville] cache quelque chose d\'incroyable... 🏠',en:'This house in [city] is hiding something incredible... 🏠'}, structure: {fr:'Plan extérieur drone/walk-up → Point fort #1 (cuisine/sdb rénovée) → Point fort #2 (sous-sol, garage, terrain) → Reveal prix/détail surprenant → CTA',en:'Exterior drone/walk-up shot → Highlight #1 (renovated kitchen/bath) → Highlight #2 (basement, garage, lot) → Price/surprise reveal → CTA'}, cta: {fr:'DM «🏠» pour recevoir la fiche complète',en:'DM «🏠» to get the full listing sheet'}, why: {fr:'Vos visites de propriétés sont votre format #1 (5K vues max). Le visuel immobilier génère le plus de vues et de sauvegardes.',en:'Your property tours are your #1 format (5K views max). Visual real estate content generates the most views and saves.'} },
+      { num: '02', title: {fr:'Leçon de Vie / Parcours Personnel',en:'Life Lesson / Personal Journey'}, hook: {fr:'[Personne] m\'a appris quelque chose que l\'école ne t\'enseignera jamais...',en:'[Person] taught me something school will never teach you...'}, structure: {fr:'Accroche émotionnelle (père, mère, mentor) → Contexte situation difficile → Leçon apprise (leadership, résilience) → Lien immobilier/entrepreneuriat → Message inspirant',en:'Emotional hook (father, mother, mentor) → Difficult situation context → Lesson learned (leadership, resilience) → Real estate/entrepreneurship link → Inspiring message'}, cta: {fr:'Partage si ça résonne avec toi 🙏',en:'Share if this resonates with you 🙏'}, why: {fr:'Le contenu personnel génère 4-5% d\'engagement — votre meilleur taux. L\'authenticité crée la connexion avec votre audience.',en:'Personal content generates 4-5% engagement — your best rate. Authenticity creates connection with your audience.'} },
+      { num: '03', title: {fr:'Conseil Immobilier Éducatif',en:'Educational Real Estate Tip'}, hook: {fr:'L\'erreur #1 que les acheteurs font en 2026...',en:'The #1 mistake buyers make in 2026...'}, structure: {fr:'Erreur commune ou mythe → Explication claire et accessible → Exemple concret (chiffres, situations réelles) → Solution actionnable → Positionnement expert',en:'Common mistake or myth → Clear explanation → Concrete example (numbers, real situations) → Actionable solution → Expert positioning'}, cta: {fr:'Sauvegarde ce post pour ne pas oublier 📌',en:'Save this post so you don\'t forget 📌'}, why: {fr:'Le contenu éducatif positionne votre expertise et attire les premiers acheteurs. Format partageable et sauvegardable.',en:'Educational content positions your expertise and attracts first-time buyers. Shareable and saveable format.'} },
+      { num: '04', title: {fr:'Contenu Couple — Miguel & Cynthia',en:'Couple Content — Miguel & Cynthia'}, hook: {fr:'Travailler avec ton/ta conjoint(e) en immobilier, ça donne ça... 😅',en:'Working with your partner in real estate looks like this... 😅'}, structure: {fr:'Scène humoristique du quotidien → Dynamique de couple au travail → Moment authentique (rire, complicité) → Message sérieux ou valeur → Tag mutuel',en:'Humorous daily scene → Couple dynamics at work → Authentic moment (laughter, complicity) → Serious message or value → Mutual tag'}, cta: {fr:'Tag quelqu\'un qui travaille avec son conjoint! 😂',en:'Tag someone who works with their partner! 😂'}, why: {fr:'Le contenu couple génère 4-5% d\'engagement. Les duos et l\'humour attirent les partages et les tags — croissance organique maximale.',en:'Couple content generates 4-5% engagement. Duets and humor drive shares and tags — maximum organic growth.'} },
+    ],
+    ideas: [
+      { title: {fr:'Série «Maison de la Semaine» — Rive-Sud',en:'«House of the Week» Series — South Shore'}, format: 'Reel / TikTok', platform: 'Both', perf: 'High', desc: {fr:'Vos visites de propriétés sont votre format #1 (5K vues max). Créer une série récurrente avec thumbnail uniforme et intro reconnaissable. Chambly, Carignan, St-Hubert — focus Rive-Sud.',en:'Your property tours are your #1 format (5K views max). Create a recurring series with uniform thumbnail and recognizable intro. Chambly, Carignan, St-Hubert — South Shore focus.'}, color: 'green' },
+      { title: {fr:'«650 Transactions» — Les leçons du terrain',en:'«650 Transactions» — Lessons from the field'}, format: 'Story / Talking Head', platform: 'Both', perf: 'High', desc: {fr:'Votre bio mentionne 650+ transactions. Chaque transaction = une histoire. Série de mini-récits avec leçons concrètes. Crédibilité + contenu infini.',en:'Your bio mentions 650+ transactions. Each transaction = a story. Series of mini-stories with concrete lessons. Credibility + infinite content.'}, color: 'green' },
+      { title: {fr:'Contenu «Couple d\'affaires» avec Cynthia',en:'«Business couple» content with Cynthia'}, format: 'Lifestyle / Fun', platform: 'Both', perf: 'High', desc: {fr:'Le contenu couple génère 4-5% d\'engagement (votre meilleur taux). Les duos, les coulisses, l\'humour du quotidien. Ce format attire les partages et les tags.',en:'Couple content generates 4-5% engagement (your best rate). Duets, behind the scenes, daily humor. This format drives shares and tags.'}, color: 'blue' },
+      { title: {fr:'Réponse aux questions fréquentes (FAQ immobilier)',en:'FAQ answers (real estate FAQ)'}, format: 'Talking Head', platform: 'TikTok first', perf: 'Medium', desc: {fr:'«Combien coûte un courtier?», «Comment évaluer sa maison?», «C\'est quoi un duplex?» — les questions que vos clients posent. Format court, éducatif, partageable.',en:'«How much does a broker cost?», «How to evaluate your home?», «What\'s a duplex?» — questions your clients ask. Short, educational, shareable format.'}, color: 'blue' },
+      { title: {fr:'Série «Avant/Après» — Rénovations et transformations',en:'«Before/After» Series — Renovations and transformations'}, format: 'Reel / TikTok', platform: 'Both', perf: 'High', desc: {fr:'Le duplex agrandi 3 étages (3K+ vues TT) montre que les transformations captivent. Montrez des avant/après de propriétés rénovées avant mise en vente.',en:'The expanded 3-floor duplex (3K+ TT views) shows transformations captivate. Show before/after of renovated properties before listing.'}, color: 'green' },
+      { title: {fr:'«Journal d\'un courtier» — Vlog quotidien',en:'«Broker diary» — Daily vlog'}, format: 'Vlog / Day-in-life', platform: 'Instagram', perf: 'Medium', desc: {fr:'Open house, signatures, visites, café avec clients. Le format «day in the life» humanise la marque et montre le travail réel derrière les transactions.',en:'Open house, signings, viewings, coffee with clients. The «day in the life» format humanizes the brand and shows the real work behind transactions.'}, color: 'purple' },
     ],
   },
 };
@@ -1375,4 +1568,6 @@ function initNavHighlight() {
 
 // ── INIT ────────────────────────────────
 
-document.addEventListener('DOMContentLoaded', renderDashboard);
+document.addEventListener('DOMContentLoaded', () => {
+  showClientPicker();
+});
