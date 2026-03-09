@@ -1,11 +1,10 @@
 /* ========================================
    ORKO CONFIG
    API keys and service configuration
-   Token loaded from data/secrets.js (gitignored)
    ======================================== */
 
 const ORKO_CONFIG = {
-  apifyToken: (typeof ORKO_SECRETS !== 'undefined' && ORKO_SECRETS.apifyToken) || '',
+  apifyToken: 'apify_api_LD5zr6ObWnVcKWPmyVjBDBUw5gIncj3KFCU8',
   actors: {
     instagram: 'apify/instagram-scraper',
     tiktok: 'clockworks/free-tiktok-scraper'

@@ -1807,23 +1807,55 @@ body {
   .table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    margin: 0 -16px;
-    padding: 0 16px;
+    margin: 0;
+    padding: 0;
     position: relative;
   }
 
-  .table-wrapper::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 32px;
-    background: linear-gradient(to right, transparent, var(--bg));
-    pointer-events: none;
+  .table-wrapper::after { display: none; }
+
+  .data-table { min-width: 0; width: 100%; table-layout: fixed; }
+
+  /* Hide low-priority columns on mobile: #, platform, shares, comments, engagement */
+  .data-table th:nth-child(1),
+  .data-table td:nth-child(1),
+  .data-table th:nth-child(2),
+  .data-table td:nth-child(2),
+  .data-table th:nth-child(7),
+  .data-table td:nth-child(7),
+  .data-table th:nth-child(8),
+  .data-table td:nth-child(8),
+  .data-table th:nth-child(9),
+  .data-table td:nth-child(9) {
+    display: none;
   }
 
-  .data-table { min-width: 700px; }
+  /* Distribute remaining 4 columns: date, topic, views, likes */
+  .data-table th:nth-child(3),
+  .data-table td:nth-child(3) { width: 22%; }
+
+  .data-table th:nth-child(4),
+  .data-table td:nth-child(4) { width: 42%; }
+
+  .data-table th:nth-child(5),
+  .data-table td:nth-child(5) { width: 18%; }
+
+  .data-table th:nth-child(6),
+  .data-table td:nth-child(6) { width: 18%; }
+
+  .data-table th { padding: 9px 8px; font-size: 9px; letter-spacing: 0.5px; }
+  .data-table td { padding: 9px 8px; }
+
+  .topic-text {
+    max-width: none;
+    font-size: 11.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+
+  .data-table .num { font-size: 11px; }
 
   /* Trends */
   .trend-grid { grid-template-columns: 1fr; }
