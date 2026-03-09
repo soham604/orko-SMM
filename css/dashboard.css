@@ -1455,6 +1455,96 @@ body {
   letter-spacing: 0.04em;
 }
 
+/* ---- Inspo Progress States ---- */
+
+.inspo-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: inspoSpin 800ms linear infinite;
+}
+
+@keyframes inspoSpin {
+  to { transform: rotate(360deg); }
+}
+
+.inspo-badge-pulse {
+  animation: inspoPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes inspoPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.inspo-progress-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.inspo-progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 2px;
+  transition: width 600ms ease;
+}
+
+.inspo-progress-label {
+  font-family: var(--font-data);
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+}
+
+.inspo-card-processing {
+  position: relative;
+  overflow: hidden;
+}
+
+.inspo-card-processing::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+  animation: inspoShimmer 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes inspoShimmer {
+  to { left: 100%; }
+}
+
+.inspo-card-error {
+  border-color: var(--red) !important;
+}
+
+.inspo-retry-btn {
+  padding: 6px 14px;
+  background: var(--red-dim);
+  border: 1px solid var(--red);
+  border-radius: 100px;
+  color: var(--red);
+  font-family: var(--font-data);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.inspo-retry-btn:hover {
+  background: var(--red);
+  color: var(--bg-darker);
+}
+
 /* ---- Inspo Ideas Section ---- */
 
 .inspo-ideas-section {
@@ -1823,6 +1913,19 @@ body {
 
   .inspo-analysis-content {
     padding: 0 14px 14px;
+  }
+
+  .inspo-progress-bar {
+    height: 4px;
+  }
+
+  .inspo-progress-label {
+    font-size: 10px;
+  }
+
+  .inspo-retry-btn {
+    min-height: 36px;
+    padding: 8px 16px;
   }
 
   /* Toast */

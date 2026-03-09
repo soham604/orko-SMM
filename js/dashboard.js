@@ -49,6 +49,11 @@ const TR = {
   'inspo_profiles_word': { fr: 'profils', en: 'profiles' },
   'inspo_patterns_label': { fr: 'PATTERNS DE CONTENU', en: 'CONTENT PATTERNS' },
   'inspo_inspired_by': { fr: 'Inspiré par', en: 'Inspired by' },
+  'inspo_scraping': { fr: 'SCRAPING DU PROFIL...', en: 'SCRAPING PROFILE...' },
+  'inspo_analyzing': { fr: 'ANALYSE DU CONTENU...', en: 'ANALYZING CONTENT...' },
+  'inspo_generating': { fr: 'GÉNÉRATION D\'IDÉES...', en: 'GENERATING IDEAS...' },
+  'inspo_error': { fr: 'ERREUR', en: 'ERROR' },
+  'inspo_retry': { fr: 'Réessayer', en: 'Retry' },
 
   // Platform cards
   'followers': { fr: 'Abonnés', en: 'Followers' },
@@ -1039,7 +1044,7 @@ function parseProfileUrl(url) {
   return null;
 }
 
-function addInspoProfile() {
+async function addInspoProfile() {
   const input = document.getElementById('inspo-url');
   if (!input) return;
   const val = input.value.trim();
@@ -1058,26 +1063,74 @@ function addInspoProfile() {
     return;
   }
 
-  profiles.push({ ...parsed, addedAt: new Date().toISOString() });
+  // Add with 'scraping' status and immediately render progress card
+  const newProfile = { ...parsed, addedAt: new Date().toISOString(), status: 'scraping' };
+  profiles.push(newProfile);
   saveInspoProfiles(profiles);
   input.value = '';
+  refreshInspoUI();
 
-  // Re-render both profiles and ideas (in case analysis exists)
+  // Start the async engine pipeline
+  const profileIndex = profiles.length - 1;
+
+  try {
+    await InspoEngine.analyzeProfile(parsed, currentClient, (stage, errorMsg) => {
+      const current = getInspoProfiles();
+      if (current[profileIndex]) {
+        current[profileIndex].status = stage;
+        if (errorMsg) current[profileIndex].errorMessage = errorMsg;
+        saveInspoProfiles(current);
+        refreshInspoUI();
+      }
+    });
+  } catch (err) {
+    console.error('InspoEngine error:', err);
+  }
+}
+
+function removeInspoProfile(idx) {
+  const profiles = getInspoProfiles();
+  const removed = profiles[idx];
+  profiles.splice(idx, 1);
+  saveInspoProfiles(profiles);
+
+  // Also remove analysis data from localStorage
+  if (removed) {
+    const storageKey = `orko-inspo-analysis-${currentClient}`;
+    const stored = JSON.parse(localStorage.getItem(storageKey) || '{}');
+    delete stored[getInspoKey(removed)];
+    localStorage.setItem(storageKey, JSON.stringify(stored));
+  }
+
+  refreshInspoUI();
+}
+
+function refreshInspoUI() {
   const list = document.getElementById('inspo-list');
   if (list) list.innerHTML = renderInspoProfiles();
   const ideasContainer = document.getElementById('inspo-ideas-container');
   if (ideasContainer) ideasContainer.innerHTML = renderInspoIdeas();
 }
 
-function removeInspoProfile(idx) {
+function retryInspoProfile(idx) {
   const profiles = getInspoProfiles();
-  profiles.splice(idx, 1);
-  saveInspoProfiles(profiles);
+  const profile = profiles[idx];
+  if (!profile) return;
 
-  const list = document.getElementById('inspo-list');
-  if (list) list.innerHTML = renderInspoProfiles();
-  const ideasContainer = document.getElementById('inspo-ideas-container');
-  if (ideasContainer) ideasContainer.innerHTML = renderInspoIdeas();
+  profile.status = 'scraping';
+  profile.errorMessage = null;
+  saveInspoProfiles(profiles);
+  refreshInspoUI();
+
+  InspoEngine.analyzeProfile(profile, currentClient, (stage, errorMsg) => {
+    const current = getInspoProfiles();
+    if (current[idx]) {
+      current[idx].status = stage;
+      if (errorMsg) current[idx].errorMessage = errorMsg;
+      saveInspoProfiles(current);
+      refreshInspoUI();
+    }
+  }).catch(err => console.error('Retry error:', err));
 }
 
 
@@ -1088,25 +1141,35 @@ function getInspoKey(profile) {
 }
 
 function getInspoAnalysis(profile) {
-  if (typeof INSPO_ANALYSIS === 'undefined') return null;
-  const clientData = INSPO_ANALYSIS[currentClient];
-  if (!clientData) return null;
-  return clientData[getInspoKey(profile)] || null;
+  // Try localStorage first (runtime data from engine)
+  const storageKey = `orko-inspo-analysis-${currentClient}`;
+  const stored = JSON.parse(localStorage.getItem(storageKey) || '{}');
+  const key = getInspoKey(profile);
+  if (stored[key]) return stored[key];
+
+  // Fall back to static INSPO_ANALYSIS (legacy/manual data)
+  if (typeof INSPO_ANALYSIS !== 'undefined') {
+    const clientData = INSPO_ANALYSIS[currentClient];
+    if (clientData) return clientData[key] || null;
+  }
+  return null;
 }
 
 function getAllInspoIdeas() {
-  if (typeof INSPO_ANALYSIS === 'undefined') return [];
-  const clientData = INSPO_ANALYSIS[currentClient];
-  if (!clientData) return [];
-
   const profiles = getInspoProfiles();
   const ideas = [];
 
+  // Merge from localStorage + static data
+  const storageKey = `orko-inspo-analysis-${currentClient}`;
+  const stored = JSON.parse(localStorage.getItem(storageKey) || '{}');
+  const staticData = (typeof INSPO_ANALYSIS !== 'undefined') ? (INSPO_ANALYSIS[currentClient] || {}) : {};
+
   profiles.forEach(profile => {
-    const analysis = clientData[getInspoKey(profile)];
+    const key = getInspoKey(profile);
+    const analysis = stored[key] || staticData[key];
     if (analysis && analysis.ideas) {
       analysis.ideas.forEach((idea, idx) => {
-        ideas.push({ ...idea, _profileKey: getInspoKey(profile), _srcIdx: idx });
+        ideas.push({ ...idea, _profileKey: key, _srcIdx: idx });
       });
     }
   });
@@ -1123,10 +1186,12 @@ function toggleInspoAnalysis(el) {
 }
 
 function copyInspoIdea(profileKey, srcIdx) {
-  if (typeof INSPO_ANALYSIS === 'undefined') return;
-  const clientData = INSPO_ANALYSIS[currentClient];
-  if (!clientData || !clientData[profileKey]) return;
-  const idea = clientData[profileKey].ideas[srcIdx];
+  const storageKey = `orko-inspo-analysis-${currentClient}`;
+  const stored = JSON.parse(localStorage.getItem(storageKey) || '{}');
+  const staticData = (typeof INSPO_ANALYSIS !== 'undefined') ? (INSPO_ANALYSIS[currentClient] || {}) : {};
+  const data = stored[profileKey] || staticData[profileKey];
+  if (!data) return;
+  const idea = data.ideas[srcIdx];
   if (!idea) return;
 
   const text = `${loc(idea.title)}\n\n${loc(idea.desc)}\n\n${t('inspo_inspired_by')} ${idea.inspiredBy}`;
@@ -1188,6 +1253,39 @@ function renderInspoProfiles() {
                 </div>
               ` : ''}
             </div>
+          </div>
+        </div>
+      `;
+    } else if (p.status === 'scraping' || p.status === 'analyzing' || p.status === 'generating') {
+      const pct = p.status === 'scraping' ? 33 : p.status === 'analyzing' ? 66 : 90;
+      return `
+        <div class="inspo-card inspo-card-processing">
+          <div class="inspo-card-left">
+            <span class="inspo-platform-badge ${p.platform} inspo-badge-pulse">${p.platform === 'instagram' ? '📸' : p.platform === 'tiktok' ? '♪' : '🔗'}</span>
+            <div style="flex:1;min-width:0">
+              <div class="inspo-handle">${p.handle}</div>
+              <div class="inspo-progress-bar"><div class="inspo-progress-fill" style="width:${pct}%"></div></div>
+              <div class="inspo-progress-label">${t('inspo_' + p.status)}</div>
+            </div>
+          </div>
+          <div class="inspo-card-right">
+            <div class="inspo-spinner"></div>
+          </div>
+        </div>
+      `;
+    } else if (p.status === 'error') {
+      return `
+        <div class="inspo-card inspo-card-error">
+          <div class="inspo-card-left">
+            <span class="inspo-platform-badge ${p.platform}">${p.platform === 'instagram' ? '📸' : p.platform === 'tiktok' ? '♪' : '🔗'}</span>
+            <div>
+              <div class="inspo-handle">${p.handle}</div>
+              <div class="inspo-progress-label" style="color:var(--red)">${p.errorMessage || t('inspo_error')}</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button class="inspo-retry-btn" onclick="retryInspoProfile(${i})">${t('inspo_retry')}</button>
+            <button class="inspo-remove-btn" onclick="removeInspoProfile(${i})">${t('inspo_remove')}</button>
           </div>
         </div>
       `;
