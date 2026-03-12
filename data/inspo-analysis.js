@@ -6,5 +6,6 @@
 
 const INSPO_ANALYSIS = {
   maxime: {},
-  sam: {}
+  sam: {},
+  serujan: {}
 };

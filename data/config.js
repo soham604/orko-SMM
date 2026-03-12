@@ -4,7 +4,7 @@
    ======================================== */
 
 const ORKO_CONFIG = {
-  apifyToken: 'apify_api_LD5zr6ObWnVcKWPmyVjBDBUw5gIncj3KFCU8',
+  apifyToken: 'apify_api_IM6lZAUgOXApKBADlCkyvLnbvInokd0P1Fgx',
   actors: {
     instagram: 'apify/instagram-scraper',
     tiktok: 'clockworks/free-tiktok-scraper'
